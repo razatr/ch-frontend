@@ -1,18 +1,20 @@
-import {Action} from "@reduxjs/toolkit";
+import { createSlice, PayloadAction} from "@reduxjs/toolkit";
 
 interface AppState {
-  example: string
+  isLoading: boolean
 }
 
-const initialState: AppState = {example: ''}
+const initialState: AppState = {isLoading: false}
 
-const appReducer = (state = initialState, action: Action) => {
-  switch (action.type) {
-    case "EXAMPLE":
-      return state
-    default:
-      return state
+const appSlice = createSlice({
+  name: 'app',
+  initialState,
+  reducers: {
+    setLoading: (state, action: PayloadAction<boolean>) => {
+      state.isLoading = action.payload
+    }
   }
-}
+})
 
-export default appReducer
+export const { setLoading } = appSlice.actions
+export default appSlice.reducer
