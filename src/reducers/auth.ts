@@ -6,6 +6,7 @@ import axios from "axios";
 import {AuthResponse} from "../models/response/AuthResponse";
 import {API_URL} from "../http";
 import {setLoading} from "./app";
+import UserService from "../services/UserService";
 
 interface AuthState {
   isAuth: boolean;
@@ -15,7 +16,8 @@ interface AuthState {
 const initialState: AuthState = {isAuth: false, user: {
     email: '',
     isActivated: false,
-    id: ''
+    userId: '',
+    registrationData: new Date()
   }
 }
 
@@ -72,6 +74,18 @@ export const logoutAction: ActionCreator<AppThunk<void>> = () => {
       dispatch(setUser({} as IUser));
       dispatch(setAuth(false));
     } catch (e) {
+      // @ts-ignore
+      console.log(e.response?.data?.message)
+    }
+  }
+}
+
+export const updateUser: ActionCreator<AppThunk> = (updatedUser: IUser) => {
+  return async (dispatch: Dispatch) => {
+    try {
+      const response = await UserService.updateUser(updatedUser);
+      dispatch(setUser(response.data));
+    } catch(e) {
       // @ts-ignore
       console.log(e.response?.data?.message)
     }

@@ -1,34 +1,46 @@
-import React, {FC, useState} from 'react';
-import {useAppDispatch} from "../../hooks";
-import {logoutAction, } from "../../reducers/auth";
-import {IUser} from "../../models/IUser";
-import UserService from "../../services/UserService";
+import {FC, useState, ChangeEvent} from 'react';
+import {useAppDispatch, useAppSelector} from "../../hooks";
+import {logoutAction, updateUser} from "../../reducers/auth";
+import {IUser, UserInfo} from "../../models/IUser";
+import { userSelector } from '../../selectors/auth';
 
 interface HomeProps {
-  user: IUser
+  
 }
 
-const Home: FC<HomeProps> = ({user}) => {
-  const dispatch = useAppDispatch();
-  const [users, setUsers] = useState<IUser[]>([]);
+const userInfoFromUser = (user: IUser): UserInfo => ({
+  name: user.name,
+  surname: user.surname,
+  lastActive: user.lastActive,
+  birthday: user.birthday,
+  weight: user.weight,
+  height: user.height,
+  avatar: user.avatar,
+})
 
-  const getUsers = async () => {
-    try {
-      const response = await UserService.fetchUsers();
-      setUsers(response.data);
-    } catch (e) {
-      console.log(e)
-    }
-  }
+const Home: FC<HomeProps> = () => {
+  const dispatch = useAppDispatch();
+  const user = useAppSelector(userSelector);
+  const [updatedUser, setUpdatedUser] = useState<UserInfo>(userInfoFromUser(user));
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setUpdatedUser({
+      ...updatedUser,
+      [event.target.name]: event.target.value
+    });
+  };
 
   return (
     <div>
-      {`Привет ${user.email}`}
-      {
-        users.map(user => (<div key={user.id}>{user.email}</div>))
-      }
+      {`Привет ${user.name}`}
+      <div>
+        <input name="name" type="text" value={updatedUser?.name ?? ''} placeholder='Введите имя' onChange={handleChange}/>
+        <input name="surname" type="text" value={updatedUser?.surname ?? ''} placeholder='Введите фамилию' onChange={handleChange}/>
+        <input name="weight" type="text" value={updatedUser?.weight ?? ''} placeholder='Введите ваш вес' onChange={handleChange}/>
+        <input name="height" type="text" value={updatedUser?.height ?? ''} placeholder='Введите ваш рост' onChange={handleChange}/>
+        <button onClick={() => dispatch(updateUser(updatedUser))}>Редактировать</button>
+      </div>
       <button onClick={() => dispatch(logoutAction())}>Выйти</button>
-      <button onClick={() => getUsers()}>Показать пользователей</button>
     </div>
   );
 };
