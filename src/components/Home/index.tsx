@@ -30,6 +30,23 @@ const Home: FC<HomeProps> = () => {
     });
   };
 
+  const handleDateChange = (event: ChangeEvent<HTMLInputElement>): void => {
+    const inputValue = event.target.value;
+    const newDate = new Date(inputValue);
+
+    if (!isNaN(newDate.getTime())) { 
+      setUpdatedUser({
+        ...updatedUser,
+        [event.target.name]: newDate
+      });
+    } else {
+      setUpdatedUser({
+        ...updatedUser,
+        [event.target.name]: null
+      });
+    }
+  };
+  
   return (
     <div>
       {`Привет ${user.name}`}
@@ -38,6 +55,7 @@ const Home: FC<HomeProps> = () => {
         <input name="surname" type="text" value={updatedUser?.surname ?? ''} placeholder='Введите фамилию' onChange={handleChange}/>
         <input name="weight" type="text" value={updatedUser?.weight ?? ''} placeholder='Введите ваш вес' onChange={handleChange}/>
         <input name="height" type="text" value={updatedUser?.height ?? ''} placeholder='Введите ваш рост' onChange={handleChange}/>
+        <input name="birthday" type="date" value={updatedUser?.birthday?.toISOString().split('T')[0] ?? 0} onChange={handleDateChange}/>
         <button onClick={() => dispatch(updateUser(updatedUser))}>Редактировать</button>
       </div>
       <button onClick={() => dispatch(logoutAction())}>Выйти</button>

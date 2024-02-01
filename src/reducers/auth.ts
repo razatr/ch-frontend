@@ -24,13 +24,13 @@ const initialState: AuthState = {isAuth: false, user: {
 export const loginAction: ActionCreator<AppThunk> = (email:string, password: string) => {
   return async (dispatch: Dispatch) => {
     try {
-      const response = await AuthService.login(email, password);
+      const response = await AuthService.login(email, password);      
       localStorage.setItem('token', response.data.accessToken);
       dispatch(setUser(response.data.user));
       dispatch(setAuth(true));
     } catch (e) {
       // @ts-ignore
-      console.log(e.response?.data?.message)
+      console.log(e.response?.data?.message);
     }
   }
 }
@@ -55,6 +55,7 @@ export const checkAuth: ActionCreator<AppThunk> = () => {
     try {
       const response = await axios.get<AuthResponse>(`${API_URL}/refresh`, {withCredentials: true});
       localStorage.setItem('token', response.data.accessToken);
+      
       dispatch(setUser(response.data.user));
       dispatch(setAuth(true));
     } catch (e) {
@@ -92,15 +93,25 @@ export const updateUser: ActionCreator<AppThunk> = (updatedUser: IUser) => {
   }
 }
 
+const prepareUser = (user: IUser) => {
+  if(user.birthday) {
+    user.birthday = new Date(user.birthday)
+  } 
+  else if(user.lastActive) {
+    user.lastActive = new Date(user.lastActive)
+  } 
+  return user;
+}
+
 const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
     setUser: (state, action: PayloadAction<IUser>) => {
-      state.user = action.payload
+      state.user = prepareUser(action.payload);
     },
     setAuth: (state, action: PayloadAction<boolean>) => {
-      state.isAuth = action.payload
+      state.isAuth = action.payload;
     }
   }
 })
