@@ -1,23 +1,23 @@
 import {ActionCreator, createSlice, Dispatch, PayloadAction} from "@reduxjs/toolkit";
-import {IUser} from "../models/IUser";
-import {AppThunk} from "../store";
-import AuthService from "../services/AuthService";
+import {IUser, ModIUser} from "../../models/IUser";
+import {AppThunk} from "..";
+import AuthService from "../../services/AuthService";
 import axios from "axios";
-import {AuthResponse} from "../models/response/AuthResponse";
-import {API_URL} from "../http";
+import {AuthResponse} from "../../models/response/AuthResponse";
+import {API_URL} from "../../http";
 import {setLoading} from "./app";
-import UserService from "../services/UserService";
+import UserService from "../../services/UserService";
 
 interface AuthState {
   isAuth: boolean;
-  user: IUser;
+  user: ModIUser;
 }
 
 const initialState: AuthState = {isAuth: false, user: {
     email: '',
     isActivated: false,
     userId: '',
-    registrationData: new Date()
+    registrationData: 0
   }
 }
 
@@ -55,7 +55,6 @@ export const checkAuth: ActionCreator<AppThunk> = () => {
     try {
       const response = await axios.get<AuthResponse>(`${API_URL}/refresh`, {withCredentials: true});
       localStorage.setItem('token', response.data.accessToken);
-      
       dispatch(setUser(response.data.user));
       dispatch(setAuth(true));
     } catch (e) {
@@ -72,7 +71,7 @@ export const logoutAction: ActionCreator<AppThunk<void>> = () => {
     try {
       await AuthService.logout();
       localStorage.removeItem('token');
-      dispatch(setUser({} as IUser));
+      dispatch(setUser({} as ModIUser));
       dispatch(setAuth(false));
     } catch (e) {
       // @ts-ignore
@@ -93,22 +92,12 @@ export const updateUser: ActionCreator<AppThunk> = (updatedUser: IUser) => {
   }
 }
 
-const prepareUser = (user: IUser) => {
-  if(user.birthday) {
-    user.birthday = new Date(user.birthday)
-  } 
-  else if(user.lastActive) {
-    user.lastActive = new Date(user.lastActive)
-  } 
-  return user;
-}
-
 const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    setUser: (state, action: PayloadAction<IUser>) => {
-      state.user = prepareUser(action.payload);
+    setUser: (state, action: PayloadAction<ModIUser>) => {
+      state.user = action.payload;
     },
     setAuth: (state, action: PayloadAction<boolean>) => {
       state.isAuth = action.payload;

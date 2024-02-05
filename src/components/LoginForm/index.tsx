@@ -1,6 +1,6 @@
 import React, {FC, useState} from 'react';
 import {useAppDispatch} from "../../hooks";
-import {loginAction, registrationAction} from "../../reducers/auth";
+import {loginAction, registrationAction} from "../../store/reducers/auth";
 
 const LoginForm: FC = () => {
   const [email, setEmail] = useState<string>('');

@@ -1,5 +1,7 @@
 export type IUser = UserAuth & UserInfo
 
+export type ModIUser = Omit<IUser, 'registrationData'> & { registrationData: number };
+
 export interface UserAuth {
   email: string,
   registrationData: Date,
