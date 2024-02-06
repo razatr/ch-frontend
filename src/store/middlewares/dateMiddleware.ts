@@ -3,8 +3,6 @@ import { Middleware } from '@reduxjs/toolkit';
 import { setUser } from '../reducers/auth';
 
 const myMiddleware: Middleware = (store) => (next) => (action) => {
-  //@ts-ignore         
-  console.log(action.type);
   //@ts-ignore
   if(action.type === setUser) {
     //@ts-ignore

@@ -4,6 +4,7 @@ import {logoutAction, updateUser} from "../../store/reducers/auth";
 import {IUser, UserInfo} from "../../models/IUser";
 import { userSelector } from '../../store/selectors/auth';
 import EditableInfo from './EditableInfo';
+import FoodHistoryService from '../../services/FoodHistoryService';
 
 interface HomeProps {
   
@@ -66,11 +67,10 @@ const Home: FC<HomeProps> = () => {
         <EditableInfo editMode={editMode} name="surname" type="text" value={updatedUser?.surname ?? ''} placeholder='Введите фамилию' onChange={handleChange}/>
         <EditableInfo editMode={editMode} name="weight" type="text" value={updatedUser?.weight ?? ''} placeholder='Введите ваш вес' onChange={handleChange}/>
         <EditableInfo editMode={editMode} name="height" type="text" value={updatedUser?.height ?? ''} placeholder='Введите ваш рост' onChange={handleChange}/>
-        {/* @ts-ignore */}
         <EditableInfo editMode={editMode} name="birthday" type="date" value={updatedUser?.birthday ?? 0} onChange={handleDateChange}/>
         <button onClick={editAction}>{editMode ? 'Сохранить' : 'Редактировать'}</button>
       </div>
-      <button onClick={() => {console.log('показать список');}}>Посомтреть контроль</button>
+      <button onClick={() => {FoodHistoryService.fetchHistory();}}>Посомтреть контроль</button>
       <button onClick={() => dispatch(logoutAction())}>Выйти</button>
     </div>
   );

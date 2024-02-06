@@ -1,10 +1,8 @@
 export type IUser = UserAuth & UserInfo
 
-export type ModIUser = Omit<IUser, 'registrationData'> & { registrationData: number };
-
 export interface UserAuth {
   email: string,
-  registrationData: Date,
+  registrationData: number,
   isActivated: boolean,
   userId: string
 }
@@ -12,8 +10,8 @@ export interface UserAuth {
 export interface UserInfo {
   name?: string,
   surname?: string,
-  lastActive?: Date,
-  birthday?: Date,
+  lastActive?: number,
+  birthday?: number,
   weight?: number,
   height?: number,
   avatar?: string,

@@ -1,5 +1,5 @@
 import {ActionCreator, createSlice, Dispatch, PayloadAction} from "@reduxjs/toolkit";
-import {IUser, ModIUser} from "../../models/IUser";
+import {IUser} from "../../models/IUser";
 import {AppThunk} from "..";
 import AuthService from "../../services/AuthService";
 import axios from "axios";
@@ -10,7 +10,7 @@ import UserService from "../../services/UserService";
 
 interface AuthState {
   isAuth: boolean;
-  user: ModIUser;
+  user: IUser;
 }
 
 const initialState: AuthState = {isAuth: false, user: {
@@ -71,7 +71,7 @@ export const logoutAction: ActionCreator<AppThunk<void>> = () => {
     try {
       await AuthService.logout();
       localStorage.removeItem('token');
-      dispatch(setUser({} as ModIUser));
+      dispatch(setUser({} as IUser));
       dispatch(setAuth(false));
     } catch (e) {
       // @ts-ignore
@@ -96,7 +96,7 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    setUser: (state, action: PayloadAction<ModIUser>) => {
+    setUser: (state, action: PayloadAction<IUser>) => {
       state.user = action.payload;
     },
     setAuth: (state, action: PayloadAction<boolean>) => {
