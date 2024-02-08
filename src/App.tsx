@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import {useEffect} from 'react';
 import LoginForm from "./components/LoginForm";
 import Home from "./components/Home";
 import {useAppDispatch, useAppSelector} from "./hooks";

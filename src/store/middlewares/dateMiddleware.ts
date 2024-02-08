@@ -1,6 +1,6 @@
 
 import { Middleware } from '@reduxjs/toolkit';
-import { setUser } from '../reducers/auth';
+import { setUser } from '../reducers/user';
 
 const myMiddleware: Middleware = (store) => (next) => (action) => {
   //@ts-ignore

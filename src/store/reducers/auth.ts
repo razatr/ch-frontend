@@ -7,19 +7,13 @@ import {AuthResponse} from "../../models/response/AuthResponse";
 import {API_URL} from "../../http";
 import {setLoading} from "./app";
 import UserService from "../../services/UserService";
+import { setUser } from "./user";
 
 interface AuthState {
   isAuth: boolean;
-  user: IUser;
 }
 
-const initialState: AuthState = {isAuth: false, user: {
-    email: '',
-    isActivated: false,
-    userId: '',
-    registrationData: 0
-  }
-}
+const initialState: AuthState = {isAuth: false}
 
 export const loginAction: ActionCreator<AppThunk> = (email:string, password: string) => {
   return async (dispatch: Dispatch) => {
@@ -96,15 +90,12 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    setUser: (state, action: PayloadAction<IUser>) => {
-      state.user = action.payload;
-    },
     setAuth: (state, action: PayloadAction<boolean>) => {
       state.isAuth = action.payload;
     }
   }
 })
 
-export const { setUser, setAuth } = authSlice.actions
+export const { setAuth } = authSlice.actions
 
 export default authSlice.reducer;
